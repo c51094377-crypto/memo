@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#172033">
+<title>Memo — メモ帳</title>
+<style>
+:root{color-scheme:light;--bg:#f4f6fb;--panel:#fff;--text:#172033;--muted:#778198;--line:#e5e9f2;--accent:#5268d9;--accent2:#e9edff;--danger:#d94b61;--shadow:0 8px 26px #24345c0d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0} .app{max-width:1200px;margin:auto;min-height:100dvh;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.brand{display:flex;align-items:center;gap:11px}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent);color:white;display:grid;place-items:center;font-size:22px;font-weight:800}.brand h1{font-size:22px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{padding:10px 13px;border-radius:11px;background:#fff;color:var(--text);border:1px solid var(--line);font-weight:650}.btn.primary{background:var(--accent);color:white;border-color:var(--accent)}.btn.danger{color:var(--danger)}
+.layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}.sidebar,.editor{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.sidebar{padding:15px;position:sticky;top:12px}.search{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:#f9faff;outline:none}.search:focus,input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #5268d91a;outline:none}.filterrow{display:flex;gap:7px;margin:12px 0;flex-wrap:wrap}.chip{padding:7px 10px;border-radius:999px;background:#f1f3f9;color:#68728a;font-size:12px;font-weight:700}.chip.active{background:var(--accent2);color:var(--accent)}.note-list{display:flex;flex-direction:column;gap:8px;max-height:calc(100dvh - 230px);overflow:auto}.note-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:left;width:100%;color:inherit}.note-card.active{border-color:var(--accent);background:#f7f8ff;box-shadow:0 0 0 1px var(--accent) inset}.note-card .title{font-weight:750;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:6px}.note-card .preview{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;min-height:18px}.note-meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin-top:10px}.empty{padding:26px 10px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}.editor{min-height:620px;padding:22px;display:flex;flex-direction:column}.editor-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.status{font-size:12px;color:var(--muted)}.title-input{width:100%;border:1px solid transparent;border-radius:10px;padding:9px 8px;font-size:26px;font-weight:800;color:var(--text);background:transparent}.title-input::placeholder{color:#b6bdcc}.editor-tools{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}.category{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--text)}.body-input{width:100%;min-height:400px;flex:1;resize:vertical;border:1px solid transparent;border-radius:10px;padding:10px 8px;line-height:1.8;font-size:16px;color:var(--text);background:transparent}.body-input::placeholder{color:#b6bdcc}.footer{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12px}.mobile-new{display:none}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#172033;color:white;padding:11px 16px;border-radius:12px;font-size:13px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .2s;z-index:5}.toast.show{opacity:1}
+@media(max-width:760px){.app{padding:13px}.brand h1{font-size:19px}.brand p{display:none}.logo{width:38px;height:38px}.header-export{display:none}.layout{grid-template-columns:1fr}.sidebar{position:static}.note-list{max-height:280px}.editor{min-height:60vh;padding:15px}.title-input{font-size:23px}.body-input{min-height:300px}.mobile-new{display:inline-block}.editor-top .btn{padding:8px 10px}}
+@media(prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#111522;--panel:#191f30;--text:#edf0fa;--muted:#9aa4bc;--line:#30384d;--accent:#8c9aff;--accent2:#2a3153;--shadow:0 8px 26px #0002}.logo,.btn.primary{color:#111522}.btn,.note-card,.category{background:#1e2538;color:var(--text)}.search{background:#141a29;color:var(--text)}.note-card.active{background:#232a45}.chip{background:#282f43;color:#bac3d8}.chip.active{background:var(--accent2);color:#b9c2ff}.title-input,.body-input{color:var(--text)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">M</div><div><h1>Memo</h1><p>思いついたことを、すぐに残そう。</p></div></div>
+ <div class="actions"><button class="btn header-export" id="exportBtn">↓ バックアップ</button><button class="btn header-export" id="importBtn">↑ 復元</button><button class="btn primary" id="newBtn">＋ 新しいメモ</button></div>
+</header>
+<div class="layout">
+ <aside class="sidebar">
+  <input class="search" id="search" type="search" placeholder="⌕ メモを検索…">
+  <div class="filterrow" id="filters">
+   <button class="chip active" data-filter="all">すべて</button><button class="chip" data-filter="pinned">📌 ピン留め</button>
+   <button class="chip" data-filter="学校">学校</button><button class="chip" data-filter="開発">開発</button><button class="chip" data-filter="動画企画">動画企画</button><button class="chip" data-filter="その他">その他</button>
+  </div>
+  <div class="note-list" id="noteList"></div>
+ </aside>
+ <main class="editor">
+  <div class="editor-top"><span class="status" id="saveStatus">この端末に保存</span><div class="actions"><button class="btn" id="pinBtn" title="ピン留め">☆ ピン留め</button><button class="btn danger" id="deleteBtn">削除</button></div></div>
+  <input id="noteTitle" class="title-input" placeholder="メモのタイトル" maxlength="180" aria-label="メモのタイトル">
+  <div class="editor-tools"><select class="category" id="category" aria-label="カテゴリー"><option>その他</option><option>学校</option><option>開発</option><option>動画企画</option></select><button class="btn" id="copyBtn">文章をコピー</button><button class="btn" id="downloadBtn">このメモを保存</button></div>
+  <textarea id="noteBody" class="body-input" placeholder="ここにメモを書く…&#10;&#10;入力内容は自動で保存されるよ。" aria-label="メモ本文"></textarea>
+  <div class="footer"><span id="wordCount">0文字</span><span id="updatedAt">メモを選択、または新規作成</span></div>
+ </main>
+</div>
+<input id="fileInput" type="file" accept="application/json,.json" hidden>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+(() => {
+ const KEY='memo_site_v1';
+ const $=id=>document.getElementById(id);
+ const title=$('noteTitle'), body=$('noteBody'), category=$('category');
+ let notes=[], currentId=null, filter='all', query='', saveTimer=null, toastTimer=null;
+ const now=()=>new Date().toISOString();
+ const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+ const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const fmtDate=s=>{if(!s)return '';const d=new Date(s);return isNaN(d)?'':d.toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'})+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});};
+ function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),1900);}
+ function persist(){try{localStorage.setItem(KEY,JSON.stringify(notes));$('saveStatus').textContent='✓ 自動保存済み';}catch(e){$('saveStatus').textContent='保存できません';toast('保存容量が足りない可能性があります');}}
+ function activeNote(){return notes.find(n=>n.id===currentId);}
+ function saveCurrent(){
+  const n=activeNote(); if(!n)return;
+  n.title=title.value; n.body=body.value; n.category=category.value; n.updated=now();
+  persist(); renderList(); $('updatedAt').textContent='更新：'+fmtDate(n.updated); $('wordCount').textContent=body.value.length+'文字';
+ }
+ function scheduleSave(){ $('saveStatus').textContent='保存中…'; clearTimeout(saveTimer); saveTimer=setTimeout(saveCurrent,220); $('wordCount').textContent=body.value.length+'文字';}
+ function renderList(){
+  const list=$('noteList');
+  let filtered=notes.filter(n=>{
+   const text=(n.title+' '+n.body).toLowerCase();
+   const matches=!query||text.includes(query.toLowerCase());
+   const matchesFilter=filter==='all'||(filter==='pinned'?n.pinned:n.category===filter);
+   return matches&&matchesFilter;
+  }).sort((a,b)=>(Number(b.pinned)-Number(a.pinned))||new Date(b.updated)-new Date(a.updated));
+  if(!filtered.length){list.innerHTML='<div class="empty">メモがありません。<br>「＋ 新しいメモ」から作成しよう。</div>';return;}
+  list.innerHTML=filtered.map(n=>`<button class="note-card ${n.id===currentId?'active':''}" data-id="${escapeHtml(n.id)}"><span class="title">${n.pinned?'📌 ':''}${escapeHtml(n.title||'無題のメモ')}</span><span class="preview">${escapeHtml(n.body||'本文はまだありません')}</span><span class="note-meta"><span>${escapeHtml(n.category||'その他')}</span><span>${fmtDate(n.updated)}</span></span></button>`).join('');
+  list.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('click',()=>selectNote(el.dataset.id)));
+ }
+ function selectNote(id){
+  clearTimeout(saveTimer); if(currentId)saveCurrent();
+  currentId=id;const n=activeNote();
+  if(!n){clearEditor();return;}
+  title.value=n.title||'';body.value=n.body||'';category.value=n.category||'その他';
+  $('pinBtn').textContent=n.pinned?'📌 ピン留め中':'☆ ピン留め';
+  $('updatedAt').textContent='更新：'+fmtDate(n.updated);$('wordCount').textContent=body.value.length+'文字';
+  $('saveStatus').textContent='この端末に保存';$('deleteBtn').disabled=false;renderList();
+ }
+ function clearEditor(){title.value='';body.value='';category.value='その他';$('pinBtn').textContent='☆ ピン留め';$('updatedAt').textContent='メモを選択、または新規作成';$('wordCount').textContent='0文字';$('saveStatus').textContent='この端末に保存';}
+ function newNote(){
+  if(currentId)saveCurrent();
+  const n={id:makeId(),title:'',body:'',category:'その他',pinned:false,created:now(),updated:now()};
+  notes.unshift(n);currentId=n.id;persist();selectNote(n.id);renderList();title.focus();toast('新しいメモを作成したよ');
+ }
+ function exportData(){
+  if(currentId)saveCurrent();
+  const blob=new Blob([JSON.stringify({app:'Memo',version:1,exportedAt:now(),notes},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='memo-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);toast('バックアップを書き出したよ');
+ }
+ function importData(file){
+  const reader=new FileReader();
+  reader.onload=()=>{try{
+   const data=JSON.parse(reader.result);const incoming=Array.isArray(data)?data:data.notes;
+   if(!Array.isArray(incoming))throw new Error('invalid');
+   if(!confirm(`${incoming.length}件のメモを読み込みます。今のメモに追加しますか？\n同じIDのメモは読み込んだ内容で置き換えます。`))return;
+   const map=new Map(notes.map(n=>[n.id,n]));
+   incoming.forEach(raw=>{if(!raw||typeof raw!=='object')return;const n={id:String(raw.id||makeId()),title:String(raw.title||''),body:String(raw.body||''),category:['学校','開発','動画企画','その他'].includes(raw.category)?raw.category:'その他',pinned:!!raw.pinned,created:raw.created||now(),updated:raw.updated||now()};map.set(n.id,n);});
+   notes=[...map.values()];persist();const target=notes[0];if(target)selectNote(target.id);else renderList();toast('復元できたよ');
+  }catch(e){alert('このファイルはメモのバックアップとして読み込めませんでした。');}};
+  reader.readAsText(file);
+ }
+ $('newBtn').addEventListener('click',newNote);
+ $('search').addEventListener('input',e=>{query=e.target.value;renderList();});
+ $('filters').querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;$('filters').querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));renderList();}));
+ title.addEventListener('input',scheduleSave);body.addEventListener('input',scheduleSave);category.addEventListener('change',scheduleSave);
+ $('pinBtn').addEventListener('click',()=>{const n=activeNote();if(!n)return toast('先にメモを作成してね');n.pinned=!n.pinned;n.updated=now();persist();selectNote(n.id);toast(n.pinned?'ピン留めしたよ':'ピン留めを解除したよ');});
+ $('deleteBtn').addEventListener('click',()=>{const n=activeNote();if(!n)return;if(!confirm(`「${n.title||'無題のメモ'}」を削除する？`))return;notes=notes.filter(x=>x.id!==n.id);currentId=null;persist();const next=notes[0];if(next)selectNote(next.id);else{clearEditor();renderList();}toast('メモを削除したよ');});
+ $('copyBtn').addEventListener('click',async()=>{const text=(title.value?title.value+'\n\n':'')+body.value;try{await navigator.clipboard.writeText(text);toast('文章をコピーしたよ');}catch(e){body.focus();body.select();try{document.execCommand('copy');toast('文章をコピーしたよ');}catch(_){toast('コピーできなかったので長押しで選択してね');}}});
+ $('downloadBtn').addEventListener('click',()=>{const n=activeNote();if(!n)return toast('先にメモを作成してね');saveCurrent();const blob=new Blob([(title.value?title.value+'\n'+'='.repeat(Math.min(title.value.length,40))+'\n\n':'')+body.value],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(title.value.trim()||'memo')+'.txt';a.click();URL.revokeObjectURL(a.href);toast('テキストファイルを保存したよ');});
+ $('exportBtn').addEventListener('click',exportData);$('importBtn').addEventListener('click',()=>$('fileInput').click());
+ $('fileInput').addEventListener('change',e=>{if(e.target.files[0])importData(e.target.files[0]);e.target.value='';});
+ try{const stored=localStorage.getItem(KEY);if(stored){const data=JSON.parse(stored);if(Array.isArray(data))notes=data;}}catch(e){}
+ if(notes.length)selectNote([...notes].sort((a,b)=>new Date(b.updated)-new Date(a.updated))[0].id);else{clearEditor();renderList();}
+})();
+</script>
+</body>
+</html>
